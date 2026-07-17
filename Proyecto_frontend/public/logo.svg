@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 48">
+  <!-- Lockup completo: isotipo + wordmark Bodegas del Istmo -->
+  <rect width="48" height="48" rx="10" fill="#1e3a5f"/>
+  <path d="M9 21.5 24 10l15 11.5V39H9Z" fill="#ffffff"/>
+  <path d="M13 23.4 24 15l11 8.4V35H13Z" fill="#1e3a5f"/>
+  <rect x="18.5" y="26.5" width="11" height="8.5" fill="#f5a524"/>
+  <rect x="23" y="26.5" width="2" height="8.5" fill="#1e3a5f"/>
+  <text x="58" y="26" font-family="Archivo, Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#0b1f33">Bodegas del Istmo</text>
+  <text x="58" y="40" font-family="Inter, Arial, sans-serif" font-size="9" letter-spacing="2.5" font-weight="500" fill="#a5590a">DISTRIBUCIÓN &amp; LOGÍSTICA</text>
+</svg>

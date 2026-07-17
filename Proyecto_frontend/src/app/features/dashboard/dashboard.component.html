@@ -1,0 +1,57 @@
+<div class="max-w-6xl mx-auto">
+    <h1 class="text-2xl font-semibold text-brand-900">Hola, {{ nombreUsuario }} 👋</h1>
+    <p class="text-slate-500 mt-1">Resumen general del inventario y la bodega.</p>
+
+    <p *ngIf="error" class="mt-6 text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3">{{ error }}</p>
+
+    <div *ngIf="cargando" class="mt-8 text-slate-400 text-sm">Cargando resumen...</div>
+
+    <div *ngIf="resumen" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a routerLink="/productos" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover:shadow-md transition-shadow">
+            <p class="text-sm text-slate-500">Productos registrados</p>
+            <p class="text-3xl font-semibold text-slate-800 mt-2">{{ resumen.totalProductos }}</p>
+        </a>
+
+        <a routerLink="/proveedores" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover:shadow-md transition-shadow">
+            <p class="text-sm text-slate-500">Proveedores activos</p>
+            <p class="text-3xl font-semibold text-slate-800 mt-2">{{ resumen.totalProveedores }}</p>
+        </a>
+
+        <a routerLink="/ordenes-compra" class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 hover:shadow-md transition-shadow">
+            <p class="text-sm text-slate-500">Órdenes de compra pendientes</p>
+            <p class="text-3xl font-semibold text-accent-600 mt-2">{{ resumen.ordenesPendientes }}</p>
+        </a>
+    </div>
+
+    <div *ngIf="resumen" class="mt-8 bg-white rounded-2xl shadow-sm border border-slate-100">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <h2 class="font-semibold text-slate-800">Alertas de stock bajo</h2>
+            <span class="text-xs font-medium bg-red-100 text-red-700 rounded-full px-2.5 py-1">
+                {{ resumen.alertasStockBajo.length }}
+            </span>
+        </div>
+
+        <div *ngIf="!resumen.alertasStockBajo.length" class="px-5 py-6 text-sm text-slate-400">
+            Sin alertas. Todos los productos están sobre su stock mínimo.
+        </div>
+
+        <table *ngIf="resumen.alertasStockBajo.length" class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-slate-500 border-b border-slate-100">
+                    <th class="px-5 py-2 font-medium">Producto</th>
+                    <th class="px-5 py-2 font-medium">Código</th>
+                    <th class="px-5 py-2 font-medium">Disponible</th>
+                    <th class="px-5 py-2 font-medium">Mínimo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let alerta of resumen.alertasStockBajo" class="border-b border-slate-50 last:border-0">
+                    <td class="px-5 py-2.5 text-slate-800">{{ alerta.producto }}</td>
+                    <td class="px-5 py-2.5 text-slate-500">{{ alerta.codigo }}</td>
+                    <td class="px-5 py-2.5 text-red-600 font-medium">{{ alerta.cantidadDisponible }}</td>
+                    <td class="px-5 py-2.5 text-slate-500">{{ alerta.stockMinimo }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

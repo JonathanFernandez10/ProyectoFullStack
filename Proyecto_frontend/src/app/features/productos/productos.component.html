@@ -1,0 +1,123 @@
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-2xl font-semibold text-slate-800">Productos</h1>
+            <p class="text-slate-500 text-sm mt-1">Catálogo de productos de la bodega.</p>
+        </div>
+        <button
+            *ngIf="puedeEscribir"
+            (click)="abrirNuevo()"
+            class="bg-accent-400 hover:bg-accent-500 text-brand-950 text-sm font-semibold rounded-lg px-4 py-2.5 transition-colors"
+        >
+            + Nuevo producto
+        </button>
+    </div>
+
+    <p *ngIf="error" class="mb-4 text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3">{{ error }}</p>
+
+    <div class="mb-4">
+        <input
+            type="text"
+            [(ngModel)]="busqueda"
+            placeholder="Buscar por nombre o código..."
+            class="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden overflow-x-auto">
+        <div *ngIf="cargando" class="px-5 py-8 text-center text-slate-400 text-sm">Cargando...</div>
+
+        <table *ngIf="!cargando" class="w-full text-sm">
+            <thead>
+                <tr class="text-left text-slate-500 border-b border-slate-100 bg-slate-50">
+                    <th class="px-5 py-3 font-medium">Nombre</th>
+                    <th class="px-5 py-3 font-medium">Código</th>
+                    <th class="px-5 py-3 font-medium">Categoría</th>
+                    <th class="px-5 py-3 font-medium">Proveedor</th>
+                    <th class="px-5 py-3 font-medium">Precio</th>
+                    <th class="px-5 py-3 font-medium">Stock mínimo</th>
+                    <th class="px-5 py-3 font-medium w-32" *ngIf="puedeEscribir"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let producto of productosFiltrados" class="border-b border-slate-50 last:border-0 hover:bg-slate-50">
+                    <td class="px-5 py-3 text-slate-800 font-medium">{{ producto.nombre }}</td>
+                    <td class="px-5 py-3 text-slate-500 font-mono text-xs">{{ producto.codigo }}</td>
+                    <td class="px-5 py-3 text-slate-500">{{ nombreCategoria(producto) }}</td>
+                    <td class="px-5 py-3 text-slate-500">{{ nombreProveedor(producto) }}</td>
+                    <td class="px-5 py-3 text-slate-500">{{ producto.precio | number:'1.2-2' }}</td>
+                    <td class="px-5 py-3 text-slate-500">{{ producto.stock }}</td>
+                    <td class="px-5 py-3" *ngIf="puedeEscribir">
+                        <div class="flex gap-2">
+                            <button (click)="abrirEditar(producto)" class="text-brand-600 hover:text-brand-800 text-xs font-medium">Editar</button>
+                            <button (click)="pedirEliminar(producto)" class="text-red-600 hover:text-red-800 text-xs font-medium">Eliminar</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr *ngIf="!productosFiltrados.length">
+                    <td colspan="7" class="px-5 py-8 text-center text-slate-400 text-sm">No hay productos registrados.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<app-modal *ngIf="modalAbierto" [titulo]="editandoId ? 'Editar producto' : 'Nuevo producto'" (cerrar)="cerrarModal()">
+    <form [formGroup]="form" (ngSubmit)="guardar()" class="space-y-4">
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
+            <input type="text" formControlName="nombre" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Código (AAA-1234)</label>
+            <input type="text" formControlName="codigo" placeholder="ABC-1234" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Descripción</label>
+            <textarea formControlName="descripcion" rows="2" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Categoría</label>
+                <select formControlName="categoria" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <option value="" disabled>Selecciona</option>
+                    <option *ngFor="let c of categorias" [value]="c._id">{{ c.nombre }}</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Proveedor</label>
+                <select formControlName="proveedor" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+                    <option value="" disabled>Selecciona</option>
+                    <option *ngFor="let p of proveedores" [value]="p._id">{{ p.nombre }}</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Precio</label>
+                <input type="number" formControlName="precio" min="0" step="0.01" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1">Stock mínimo</label>
+                <input type="number" formControlName="stock" min="0" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+            </div>
+        </div>
+        <div *ngIf="!editandoId">
+            <label class="block text-sm font-medium text-slate-700 mb-1">Cantidad inicial en inventario</label>
+            <input type="number" formControlName="cantidadInicial" min="0" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <p *ngIf="errorModal" class="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{{ errorModal }}</p>
+        <div class="flex justify-end gap-3 pt-2">
+            <button type="button" (click)="cerrarModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cancelar</button>
+            <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-brand-600 hover:bg-brand-700 rounded-lg">Guardar</button>
+        </div>
+    </form>
+</app-modal>
+
+<app-confirm-dialog
+    *ngIf="porEliminar"
+    [titulo]="'Eliminar producto'"
+    [mensaje]="'¿Eliminar el producto \'' + porEliminar.nombre + '\'? Esta acción no se puede deshacer.'"
+    (confirmar)="confirmarEliminar()"
+    (cancelar)="porEliminar = null"
+></app-confirm-dialog>

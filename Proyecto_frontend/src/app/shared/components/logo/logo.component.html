@@ -1,0 +1,25 @@
+<div class="flex items-center gap-3">
+    <svg
+        [attr.width]="size"
+        [attr.height]="size"
+        viewBox="0 0 48 48"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        class="shrink-0"
+    >
+        <rect width="48" height="48" rx="10" [attr.fill]="scheme === 'onDark' ? '#f5a524' : '#1e3a5f'" />
+        <path d="M9 21.5 24 10l15 11.5V39H9Z" [attr.fill]="scheme === 'onDark' ? '#06121f' : '#ffffff'" />
+        <path d="M13 23.4 24 15l11 8.4V35H13Z" [attr.fill]="scheme === 'onDark' ? '#f5a524' : '#1e3a5f'" />
+        <rect x="18.5" y="26.5" width="11" height="8.5" [attr.fill]="scheme === 'onDark' ? '#06121f' : '#f5a524'" />
+        <rect x="23" y="26.5" width="2" height="8.5" [attr.fill]="scheme === 'onDark' ? '#f5a524' : '#1e3a5f'" />
+    </svg>
+
+    <div *ngIf="variant === 'lockup'" class="leading-tight">
+        <p class="font-display font-semibold" [ngClass]="scheme === 'onDark' ? 'text-white' : 'text-brand-900'">
+            {{ nombre }}
+        </p>
+        <p class="text-[11px] tracking-wide" [ngClass]="scheme === 'onDark' ? 'text-brand-300' : 'text-slate-400'">
+            {{ sublinea }}
+        </p>
+    </div>
+</div>

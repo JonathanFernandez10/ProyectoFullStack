@@ -1,0 +1,30 @@
+# Dependencias
+node_modules/
+
+# Angular
+.angular/
+
+# Variables de entorno
+.env
+
+# Logs
+logs
+*.log
+
+# Visual Studio Code
+.vscode/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Carpeta de compilación Angular
+dist/
+
+# Cobertura de pruebas
+coverage/
+
+# Documentación y archivos locales de trabajo
+docs/
+.claude/
+CLAUDE.md

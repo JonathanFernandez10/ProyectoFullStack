@@ -1,0 +1,179 @@
+<div class="min-h-screen bg-white">
+
+    <!-- Barra de navegación -->
+    <header class="sticky top-0 z-20 bg-white/90 backdrop-blur border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 lg:px-6 h-16 flex items-center justify-between">
+            <app-logo variant="lockup" scheme="onLight" [size]="36" nombre="Bodegas del Istmo" sublinea="DISTRIBUCIÓN &amp; LOGÍSTICA"></app-logo>
+            <nav class="hidden sm:flex items-center gap-6 text-sm text-slate-600">
+                <a href="#quienes-somos" class="hover:text-brand-600 transition-colors">Quiénes somos</a>
+                <a href="#mision-vision" class="hover:text-brand-600 transition-colors">Misión y visión</a>
+                <a href="#valores" class="hover:text-brand-600 transition-colors">Valores</a>
+            </nav>
+            <a
+                routerLink="/login"
+                class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg px-4 py-2 transition-colors"
+            >
+                Acceder al sistema
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="bg-brand-950 text-white relative overflow-hidden">
+        <svg class="absolute inset-0 w-full h-full opacity-[0.05]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="hero-bodegas" width="72" height="72" patternUnits="userSpaceOnUse">
+                    <path d="M8 30 24 18l16 12v22H8Z" fill="none" stroke="#8fabc6" stroke-width="1.5"/>
+                    <rect x="18" y="38" width="12" height="10" fill="none" stroke="#f5a524" stroke-width="1.5"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hero-bodegas)"/>
+        </svg>
+        <div class="max-w-6xl mx-auto px-4 lg:px-6 py-20 lg:py-28 relative">
+            <p class="text-accent-400 font-medium text-sm tracking-wider uppercase mb-4">Desde 2001 moviendo a Panamá</p>
+            <h1 class="text-4xl lg:text-5xl font-bold leading-tight max-w-3xl">
+                La logística que tu negocio necesita, con la trazabilidad que tu inventario merece.
+            </h1>
+            <p class="mt-6 text-slate-300 text-lg max-w-2xl">
+                Somos <strong class="text-white">Bodegas del Istmo, S.A.</strong>, empresa panameña dedicada a la
+                distribución y comercialización de productos. Administramos el almacenamiento, abastecimiento y
+                despacho de mercancías para cientos de comercios en todo el país.
+            </p>
+            <div class="mt-8 flex flex-wrap gap-4">
+                <a
+                    routerLink="/login"
+                    class="bg-accent-400 hover:bg-accent-500 text-brand-950 font-semibold rounded-lg px-6 py-3 transition-colors"
+                >
+                    Entrar a SmartInventory
+                </a>
+                <a
+                    href="#quienes-somos"
+                    class="border border-white/25 hover:border-white/60 text-white font-medium rounded-lg px-6 py-3 transition-colors"
+                >
+                    Conócenos
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="border-b border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 lg:px-6 py-10 grid grid-cols-2 lg:grid-cols-4 gap-6">
+            <div *ngFor="let stat of stats" class="text-center">
+                <p class="text-3xl font-bold text-brand-600">{{ stat.valor }}</p>
+                <p class="text-sm text-slate-500 mt-1">{{ stat.etiqueta }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiénes somos -->
+    <section id="quienes-somos" class="max-w-6xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
+        <div class="grid lg:grid-cols-2 gap-10 items-center">
+            <div>
+                <p class="text-brand-600 font-medium text-sm tracking-wider uppercase mb-3">Quiénes somos</p>
+                <h2 class="text-3xl font-bold text-slate-800">Una bodega no guarda cajas. Guarda promesas.</h2>
+                <p class="mt-4 text-slate-600 leading-relaxed">
+                    Nacimos en 2001 como un pequeño depósito familiar en la Ciudad de Panamá. Hoy operamos tres
+                    centros de distribución y una flota propia que abastece a comercios minoristas, ferreterías,
+                    farmacias y oficinas en todo el territorio nacional.
+                </p>
+                <p class="mt-4 text-slate-600 leading-relaxed">
+                    Nuestro equipo de encargados de bodega, compradores y coordinadores logísticos trabaja sobre
+                    <strong>SmartInventory</strong>, nuestra plataforma interna de gestión, que mantiene sincronizados
+                    en tiempo real los catálogos, existencias, movimientos y órdenes de compra de toda la operación.
+                </p>
+            </div>
+            <div class="bg-slate-50 rounded-2xl p-8 border border-slate-100">
+                <div class="space-y-5">
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center shrink-0 font-bold">01</div>
+                        <div>
+                            <p class="font-semibold text-slate-800">Recepción y registro</p>
+                            <p class="text-sm text-slate-500 mt-0.5">Cada mercancía entrante se registra y clasifica por categoría y proveedor.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center shrink-0 font-bold">02</div>
+                        <div>
+                            <p class="font-semibold text-slate-800">Almacenamiento inteligente</p>
+                            <p class="text-sm text-slate-500 mt-0.5">Ubicaciones controladas y alertas automáticas cuando el stock cae bajo el mínimo.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="w-10 h-10 rounded-lg bg-brand-100 text-brand-700 flex items-center justify-center shrink-0 font-bold">03</div>
+                        <div>
+                            <p class="font-semibold text-slate-800">Despacho y reabastecimiento</p>
+                            <p class="text-sm text-slate-500 mt-0.5">Salidas trazables y órdenes de compra directas a los proveedores autorizados.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Misión y visión -->
+    <section id="mision-vision" class="bg-slate-50 border-y border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 lg:px-6 py-16 lg:py-20 grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm">
+                <p class="text-brand-600 font-medium text-sm tracking-wider uppercase mb-3">Misión</p>
+                <p class="text-slate-700 text-lg leading-relaxed">
+                    Garantizar que cada producto llegue al lugar correcto, en el momento correcto y en las condiciones
+                    correctas, ofreciendo a nuestros clientes y proveedores una operación de bodega confiable,
+                    transparente y respaldada por tecnología.
+                </p>
+            </div>
+            <div class="bg-white rounded-2xl p-8 border border-slate-100 shadow-sm">
+                <p class="text-brand-600 font-medium text-sm tracking-wider uppercase mb-3">Visión</p>
+                <p class="text-slate-700 text-lg leading-relaxed">
+                    Ser la empresa de distribución y gestión de inventarios de referencia en Centroamérica para 2030,
+                    reconocida por la exactitud de sus existencias, la puntualidad de sus despachos y la confianza de
+                    su gente.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Valores -->
+    <section id="valores" class="max-w-6xl mx-auto px-4 lg:px-6 py-16 lg:py-20">
+        <div class="text-center mb-12">
+            <p class="text-brand-600 font-medium text-sm tracking-wider uppercase mb-3">Nuestros valores</p>
+            <h2 class="text-3xl font-bold text-slate-800">Lo que nos mueve todos los días</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div *ngFor="let valor of valores" class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                <div class="w-11 h-11 rounded-xl bg-brand-100 text-brand-700 flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="valor.icono" />
+                    </svg>
+                </div>
+                <h3 class="font-semibold text-slate-800 text-lg">{{ valor.titulo }}</h3>
+                <p class="text-sm text-slate-500 mt-2 leading-relaxed">{{ valor.descripcion }}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA final -->
+    <section class="bg-brand-900">
+        <div class="max-w-6xl mx-auto px-4 lg:px-6 py-14 text-center">
+            <h2 class="text-2xl lg:text-3xl font-bold text-white">¿Formas parte del equipo o eres proveedor autorizado?</h2>
+            <p class="text-brand-300 mt-3">Ingresa a SmartInventory para gestionar inventarios, movimientos y órdenes de compra.</p>
+            <a
+                routerLink="/login"
+                class="inline-block mt-6 bg-accent-400 hover:bg-accent-500 text-brand-950 font-semibold rounded-lg px-8 py-3 transition-colors"
+            >
+                Acceder al sistema
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-100">
+        <div class="max-w-6xl mx-auto px-4 lg:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+                <app-logo variant="icon" scheme="onLight" [size]="24"></app-logo>
+                Bodegas del Istmo, S.A. — Ciudad de Panamá
+            </div>
+            <p class="text-xs text-slate-400">© {{ anioActual }} Bodegas del Istmo. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</div>
