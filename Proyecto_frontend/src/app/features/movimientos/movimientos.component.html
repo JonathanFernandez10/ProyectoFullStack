@@ -3,6 +3,20 @@
         <div>
             <h1 class="text-2xl font-semibold text-slate-800">Movimientos</h1>
             <p class="text-slate-500 text-sm mt-1">Entradas, salidas, ajustes y devoluciones de inventario.</p>
+            <div class="flex gap-3">
+                <button
+                (click)="exportarCSV()"
+                class="border border-brand-600 text-brand-600 hover:bg-brand-50 text-sm font-medium rounded-lg px-4 py-2.5 transition-colors"
+                >
+                Exportar CSV
+                </button>
+                <button
+                (click)="abrirNuevo()"
+                class="bg-accent-400 hover:bg-accent-500 text-brand-950 text-sm font-semibold rounded-lg px-4 py-2.5 transition-colors"
+                >
+                + Nuevo movimiento
+                </button>
+        </div>
         </div>
         <button
             (click)="abrirNuevo()"
@@ -14,13 +28,28 @@
 
     <p *ngIf="error" class="mb-4 text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3">{{ error }}</p>
 
-    <div class="mb-4">
+    <div class="mb-4 flex flex-wrap gap-3 items-end">
         <input
             type="text"
             [(ngModel)]="busqueda"
             placeholder="Buscar por producto o código..."
-            class="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+            class="w-full sm:w-72 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
+        <select
+            [(ngModel)]="filtroTipo"
+            class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+            <option value="">Todos los tipos</option>
+            <option *ngFor="let t of tipos" [value]="t">{{ t }}</option>
+        </select>
+        <div class="flex items-center gap-2 text-sm text-slate-500">
+            <label>Desde</label>
+            <input type="date" [(ngModel)]="fechaDesde" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
+        <div class="flex items-center gap-2 text-sm text-slate-500">
+            <label>Hasta</label>
+            <input type="date" [(ngModel)]="fechaHasta" class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
+        </div>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden overflow-x-auto">

@@ -18,6 +18,9 @@ export class MovimientosComponent implements OnInit {
     movimientos: Movimiento[] = [];
     productos: Producto[] = [];
     busqueda = '';
+    filtroTipo = '';                 // '' = todos los tipos
+    fechaDesde = '';                 // formato YYYY-MM-DD
+    fechaHasta = '';
     cargando = false;
     error: string | null = null;
     errorModal: string | null = null;
@@ -44,12 +47,55 @@ export class MovimientosComponent implements OnInit {
 
     get movimientosFiltrados(): Movimiento[] {
         const termino = this.busqueda.trim().toLowerCase();
-        if (!termino) return this.movimientos;
+
         return this.movimientos.filter(m => {
             const p = typeof m.producto === 'string' ? null : m.producto;
-            return p?.nombre.toLowerCase().includes(termino) || p?.codigo.toLowerCase().includes(termino);
+
+            const coincideTermino = !termino ||
+                !!p?.nombre.toLowerCase().includes(termino) ||
+                !!p?.codigo.toLowerCase().includes(termino);
+
+            const coincideTipo = !this.filtroTipo || m.tipoMovimiento === this.filtroTipo;
+
+            // La fecha llega como texto ISO (2026-07-15T...); comparamos solo la parte
+            // de la fecha (primeros 10 caracteres) para incluir el día completo del "hasta".
+            const soloFecha = (m.fecha || '').substring(0, 10);
+            const coincideDesde = !this.fechaDesde || soloFecha >= this.fechaDesde;
+            const coincideHasta = !this.fechaHasta || soloFecha <= this.fechaHasta;
+
+            return coincideTermino && coincideTipo && coincideDesde && coincideHasta;
         });
     }
+
+    exportarCSV(): void {
+        const encabezados = ['Producto', 'Codigo', 'Tipo', 'Cantidad', 'Usuario', 'Fecha'];
+
+        const escapar = (valor: string) => `"${String(valor).replace(/"/g, '""')}"`;
+
+        const filas = this.movimientosFiltrados.map(m => {
+            const p = typeof m.producto === 'string' ? null : m.producto;
+            return [
+                this.nombreProducto(m),
+                p?.codigo || '',
+                m.tipoMovimiento,
+                String(m.cantidad),
+                this.nombreUsuario(m),
+                (m.fecha || '').substring(0, 10)
+            ].map(escapar).join(',');
+        });
+
+        // El BOM (﻿) hace que Excel abra los acentos correctamente.
+        const contenido = '﻿' + [encabezados.map(escapar).join(','), ...filas].join('\r\n');
+
+        const blob = new Blob([contenido], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = 'movimientos.csv';
+        enlace.click();
+        URL.revokeObjectURL(url);
+    }
+
 
     ngOnInit(): void {
         this.cargar();
