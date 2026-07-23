@@ -15,13 +15,20 @@
 
     <p *ngIf="error" class="mb-4 text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3">{{ error }}</p>
 
-    <div class="mb-4">
+    <div class="mb-4 flex flex-wrap gap-3">
         <input
             type="text"
             [(ngModel)]="busqueda"
             placeholder="Buscar por nombre o código..."
             class="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
+        <select
+            [(ngModel)]="filtroCategoria"
+            class="w-full sm:w-64 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+            <option value="">Todas las categorías</option>
+            <option *ngFor="let c of categorias" [value]="c._id">{{ c.nombre }}</option>
+        </select>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden overflow-x-auto">
@@ -30,12 +37,20 @@
         <table *ngIf="!cargando" class="w-full text-sm">
             <thead>
                 <tr class="text-left text-slate-500 border-b border-slate-100 bg-slate-50">
-                    <th class="px-5 py-3 font-medium">Nombre</th>
-                    <th class="px-5 py-3 font-medium">Código</th>
+                    <th class="px-5 py-3 font-medium cursor-pointer select-none hover:text-brand-600" (click)="ordenar('nombre')">
+                        Nombre <span *ngIf="ordenarPor === 'nombre'">{{ ordenAsc ? '▲' : '▼' }}</span>
+                    </th>
+                    <th class="px-5 py-3 font-medium cursor-pointer select-none hover:text-brand-600" (click)="ordenar('codigo')">
+                        Código <span *ngIf="ordenarPor === 'codigo'">{{ ordenAsc ? '▲' : '▼' }}</span>
+                    </th>
                     <th class="px-5 py-3 font-medium">Categoría</th>
                     <th class="px-5 py-3 font-medium">Proveedor</th>
-                    <th class="px-5 py-3 font-medium">Precio</th>
-                    <th class="px-5 py-3 font-medium">Stock mínimo</th>
+                    <th class="px-5 py-3 font-medium cursor-pointer select-none hover:text-brand-600" (click)="ordenar('precio')">
+                        Precio <span *ngIf="ordenarPor === 'precio'">{{ ordenAsc ? '▲' : '▼' }}</span>
+                    </th>
+                    <th class="px-5 py-3 font-medium cursor-pointer select-none hover:text-brand-600" (click)="ordenar('stock')">
+                        Stock mínimo <span *ngIf="ordenarPor === 'stock'">{{ ordenAsc ? '▲' : '▼' }}</span>
+                    </th>
                     <th class="px-5 py-3 font-medium w-32" *ngIf="puedeEscribir"></th>
                 </tr>
             </thead>

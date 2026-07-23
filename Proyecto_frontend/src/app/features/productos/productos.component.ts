@@ -22,6 +22,9 @@ export class ProductosComponent implements OnInit {
     categorias: Categoria[] = [];
     proveedores: Proveedor[] = [];
     busqueda = '';
+    filtroCategoria = '';            // '' = todas las categorías
+    ordenarPor = 'nombre';           // columna activa para el orden
+    ordenAsc = true;                 // true = ascendente, false = descendente
     cargando = false;
     error: string | null = null;
     errorModal: string | null = null;
@@ -57,11 +60,53 @@ export class ProductosComponent implements OnInit {
 
     get productosFiltrados(): Producto[] {
         const termino = this.busqueda.trim().toLowerCase();
-        if (!termino) return this.productos;
-        return this.productos.filter(p =>
-            p.nombre.toLowerCase().includes(termino) ||
-            p.codigo.toLowerCase().includes(termino)
-        );
+
+        // 1. Filtrar por término de búsqueda y por categoría seleccionada.
+        const filtrados = this.productos.filter(p => {
+            const coincideTermino = !termino ||
+                p.nombre.toLowerCase().includes(termino) ||
+                p.codigo.toLowerCase().includes(termino);
+
+            const coincideCategoria = !this.filtroCategoria ||
+                this.idCategoria(p) === this.filtroCategoria;
+
+            return coincideTermino && coincideCategoria;
+        });
+
+        // 2. Ordenar. Se usa una copia ([...]) para no alterar this.productos.
+        const factor = this.ordenAsc ? 1 : -1;
+        return [...filtrados].sort((a, b) => {
+            let comparacion: number;
+            switch (this.ordenarPor) {
+                case 'precio':
+                    comparacion = a.precio - b.precio;
+                    break;
+                case 'stock':
+                    comparacion = a.stock - b.stock;
+                    break;
+                case 'codigo':
+                    comparacion = a.codigo.localeCompare(b.codigo);
+                    break;
+                default:
+                    comparacion = a.nombre.localeCompare(b.nombre);
+            }
+            return comparacion * factor;
+        });
+    }
+
+    // Id de la categoría de un producto, venga como objeto poblado o como texto.
+    private idCategoria(producto: Producto): string {
+        return typeof producto.categoria === 'string' ? producto.categoria : producto.categoria._id;
+    }
+
+    // Cambia la columna de orden; si es la misma, invierte la dirección.
+    ordenar(campo: string): void {
+        if (this.ordenarPor === campo) {
+            this.ordenAsc = !this.ordenAsc;
+        } else {
+            this.ordenarPor = campo;
+            this.ordenAsc = true;
+        }
     }
 
     ngOnInit(): void {
