@@ -45,6 +45,7 @@
                     <td class="px-5 py-3 text-slate-500">{{ proveedor.correo }}</td>
                     <td class="px-5 py-3" *ngIf="puedeEscribir">
                         <div class="flex gap-2">
+                            <button (click)="verDetalle(proveedor)" class="text-slate-600 hover:text-slate-900 text-xs font-medium">Ver detalle</button>
                             <button (click)="abrirEditar(proveedor)" class="text-brand-600 hover:text-brand-800 text-xs font-medium">Editar</button>
                             <button (click)="pedirEliminar(proveedor)" class="text-red-600 hover:text-red-800 text-xs font-medium">Eliminar</button>
                         </div>
@@ -97,3 +98,65 @@
     (confirmar)="confirmarEliminar()"
     (cancelar)="porEliminar = null"
 ></app-confirm-dialog>
+
+<app-modal *ngIf="detalle" [titulo]="'Detalle del proveedor'" (cerrar)="cerrarDetalle()">
+    <div class="space-y-5">
+        <!-- Datos del proveedor -->
+        <div>
+            <h3 class="text-lg font-semibold text-brand-900">{{ detalle.nombre }}</h3>
+            <div class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                <p class="text-slate-500">Contacto: <span class="text-slate-800">{{ detalle.contacto || '—' }}</span></p>
+                <p class="text-slate-500">Teléfono: <span class="text-slate-800">{{ detalle.telefono }}</span></p>
+                <p class="text-slate-500">Correo: <span class="text-slate-800">{{ detalle.correo }}</span></p>
+                <p class="text-slate-500">Dirección: <span class="text-slate-800">{{ detalle.direccion || '—' }}</span></p>
+            </div>
+        </div>
+
+        <!-- Órdenes de compra del proveedor -->
+        <div>
+            <h4 class="text-sm font-semibold text-slate-700 mb-2">Órdenes de compra</h4>
+
+            <p *ngIf="cargandoDetalle" class="text-sm text-slate-400">Cargando órdenes...</p>
+
+            <p *ngIf="!cargandoDetalle && !ordenesDelProveedor.length" class="text-sm text-slate-400">
+                Este proveedor no tiene órdenes registradas.
+            </p>
+
+            <table *ngIf="!cargandoDetalle && ordenesDelProveedor.length" class="w-full text-sm">
+                <thead>
+                    <tr class="text-left text-slate-500 border-b border-slate-100">
+                        <th class="py-2 font-medium">Producto</th>
+                        <th class="py-2 font-medium">Cantidad</th>
+                        <th class="py-2 font-medium">Fecha</th>
+                        <th class="py-2 font-medium">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let orden of ordenesDelProveedor" class="border-b border-slate-50 last:border-0">
+                        <td class="py-2 text-slate-800">{{ nombreProductoOrden(orden) }}</td>
+                        <td class="py-2 text-slate-500">{{ orden.cantidad }}</td>
+                        <td class="py-2 text-slate-400 text-xs">{{ orden.fecha | date:'short' }}</td>
+                        <td class="py-2">
+                            <span
+                                class="text-xs font-medium rounded-full px-2.5 py-1"
+                                [class.bg-slate-100]="orden.estado === 'pendiente'"
+                                [class.text-slate-700]="orden.estado === 'pendiente'"
+                                [class.bg-brand-100]="orden.estado === 'aprobada'"
+                                [class.text-brand-700]="orden.estado === 'aprobada'"
+                                [class.bg-emerald-100]="orden.estado === 'recibida'"
+                                [class.text-emerald-700]="orden.estado === 'recibida'"
+                                [class.bg-red-100]="orden.estado === 'cancelada'"
+                                [class.text-red-700]="orden.estado === 'cancelada'"
+                            >{{ orden.estado }}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-end pt-2">
+            <button type="button" (click)="cerrarDetalle()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg">Cerrar</button>
+        </div>
+    </div>
+</app-modal>
+

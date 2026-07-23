@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ProveedorService } from '../../core/services/proveedor.service';
+import { OrdenCompraService } from '../../core/services/orden-compra.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Proveedor } from '../../shared/interfaces/proveedor.interface';
+import { OrdenCompra } from '../../shared/interfaces/orden-compra.interface';
 import { ModalComponent } from '../../shared/components/modal/modal.component';
 import { ConfirmDialogComponent } from '../../shared/components/confirm-dialog/confirm-dialog.component';
 
@@ -24,10 +26,16 @@ export class ProveedoresComponent implements OnInit {
     editandoId: string | null = null;
     porEliminar: Proveedor | null = null;
 
+    // Detalle: proveedor seleccionado y las órdenes de compra que se le han hecho.
+    detalle: Proveedor | null = null;
+    ordenesDelProveedor: OrdenCompra[] = [];
+    cargandoDetalle = false;
+
     form: FormGroup;
 
     constructor(
         private proveedorService: ProveedorService,
+        private ordenService: OrdenCompraService,
         private authService: AuthService,
         private fb: FormBuilder
     ) {
@@ -118,7 +126,35 @@ export class ProveedoresComponent implements OnInit {
             }
         });
     }
+    
+    // Abre el detalle del proveedor y carga sus órdenes de compra.
+    verDetalle(proveedor: Proveedor): void {
+        this.detalle = proveedor;
+        this.ordenesDelProveedor = [];
+        this.cargandoDetalle = true;
 
+        this.ordenService.getOrdenes().subscribe({
+            next: (res) => {
+                this.ordenesDelProveedor = res.ordenes.filter(o => {
+                    // El proveedor de la orden puede venir como objeto poblado o como id.
+                    const idProv = typeof o.proveedor === 'string' ? o.proveedor : o.proveedor._id;
+                    return idProv === proveedor._id;
+                });
+                this.cargandoDetalle = false;
+            },
+            error: () => {
+                this.cargandoDetalle = false;
+            }
+        });
+    }
+
+    cerrarDetalle(): void {
+        this.detalle = null;
+    }
+
+    nombreProductoOrden(orden: OrdenCompra): string {
+        return typeof orden.producto === 'string' ? orden.producto : orden.producto.nombre;
+    }
     pedirEliminar(proveedor: Proveedor): void {
         this.porEliminar = proveedor;
     }

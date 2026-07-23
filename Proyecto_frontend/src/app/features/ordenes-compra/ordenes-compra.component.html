@@ -17,13 +17,21 @@
 
     <p *ngIf="error" class="mb-4 text-sm text-red-600 bg-red-50 rounded-lg px-4 py-3">{{ error }}</p>
 
-    <div class="mb-4">
+    <div class="mb-4 flex flex-wrap gap-3">
+
         <input
             type="text"
             [(ngModel)]="busqueda"
             placeholder="Buscar por proveedor o producto..."
             class="w-full sm:w-80 rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
         >
+        <select
+            [(ngModel)]="filtroEstado"
+            class="rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500"
+        >
+            <option value="">Todos los estados</option>
+            <option *ngFor="let e of estados" [value]="e">{{ e }}</option>
+        </select>
     </div>
 
     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden overflow-x-auto">
