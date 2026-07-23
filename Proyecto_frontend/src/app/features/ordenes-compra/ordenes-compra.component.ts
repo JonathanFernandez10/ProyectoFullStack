@@ -22,6 +22,7 @@ export class OrdenesCompraComponent implements OnInit {
     proveedores: Proveedor[] = [];
     productos: Producto[] = [];
     busqueda = '';
+    filtroEstado = '';               // '' = todos los estados
     cargando = false;
     error: string | null = null;
     errorModal: string | null = null;
@@ -57,11 +58,17 @@ export class OrdenesCompraComponent implements OnInit {
 
     get ordenesFiltradas(): OrdenCompra[] {
         const termino = this.busqueda.trim().toLowerCase();
-        if (!termino) return this.ordenes;
         return this.ordenes.filter(o => {
             const prov = typeof o.proveedor === 'string' ? null : o.proveedor;
             const prod = typeof o.producto === 'string' ? null : o.producto;
-            return prov?.nombre.toLowerCase().includes(termino) || prod?.nombre.toLowerCase().includes(termino);
+
+            const coincideTermino = !termino ||
+                !!prov?.nombre.toLowerCase().includes(termino) ||
+                !!prod?.nombre.toLowerCase().includes(termino);
+
+            const coincideEstado = !this.filtroEstado || o.estado === this.filtroEstado;
+
+            return coincideTermino && coincideEstado;
         });
     }
 
